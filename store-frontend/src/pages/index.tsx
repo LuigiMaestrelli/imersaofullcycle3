@@ -4,25 +4,20 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import Head from 'next/head';
-import styles from '../../styles/Home.module.css';
+import Link from 'next/link';
+import { GetServerSideProps, NextPage } from 'next';
 import { Product } from '../model';
+import http from '../http';
 
-const products: Product[] = [
-    {
-        id: 'uuid',
-        name: 'teste',
-        description: 'produto de teste',
-        price: 5.23,
-        image_url: 'https://source.unsplash.com/random?product',
-        slug: 'produto-teste',
-        created_at: '2021-07-13T00:00:00'
-    }
-];
+interface ProductsListPageProps {
+    products: Product[];
+}
 
-export default function ProductsListPage() {
+const ProductsListPage: NextPage<ProductsListPageProps> = ({ products }) => {
     return (
-        <div className={styles.container}>
+        <div>
             <Head>
                 <title>Listagem de produtos</title>
             </Head>
@@ -30,23 +25,41 @@ export default function ProductsListPage() {
                 Produtos
             </Typography>
 
-            {products.map(product => {
-                return (
-                    <Card key={product.id}>
-                        <CardMedia image={product.image_url} />
-                        <CardContent>
-                            <Typography component="h2" variant="h5" gutterBottom>
-                                {product.name}
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small" color="primary" component="a">
-                                Detalhes
-                            </Button>
-                        </CardActions>
-                    </Card>
-                );
-            })}
+            <Grid container spacing={4}>
+                {products.map(product => {
+                    return (
+                        <Grid key={product.id} item xs={12} sm={6} md={4}>
+                            <Card>
+                                <CardMedia style={{ paddingTop: '56%' }} image={product.image_url} />
+                                <CardContent>
+                                    <Typography component="h2" variant="h5" gutterBottom>
+                                        {product.name}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Link href="/products/[slug]" as={`/products/${product.slug}`} passHref>
+                                        <Button size="small" color="primary" component="a">
+                                            Detalhes
+                                        </Button>
+                                    </Link>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    );
+                })}
+            </Grid>
         </div>
     );
-}
+};
+
+export default ProductsListPage;
+
+export const getServerSideProps: GetServerSideProps<ProductsListPageProps> = async context => {
+    const response = await http.get('products');
+
+    return {
+        props: {
+            products: response.data
+        }
+    };
+};

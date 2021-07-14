@@ -4,6 +4,9 @@ services:
         image: confluentinc/cp-zookeeper:latest
         environment:
             ZOOKEEPER_CLIENT_PORT: 2181
+        volumes:
+            - .zoo-data/data:/var/lib/zookeeper/data
+            - .zoo-data/log:/var/lib/zookeeper/log
 
     kafka:
         image: confluentinc/cp-kafka:latest
@@ -23,7 +26,7 @@ services:
         extra_hosts:
             - 'host.docker.internal:172.17.0.1'
         volumes:
-            - .kafka-data:/kafka-volume
+            - .kafka-data:/var/lib/kafka/data
 
     kafka-topics-generator:
         image: confluentinc/cp-kafka:latest
