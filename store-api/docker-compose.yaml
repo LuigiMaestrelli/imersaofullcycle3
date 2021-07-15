@@ -4,8 +4,8 @@ services:
     app:
         build: .
         entrypoint: ./.docker/entrypoint.sh
-        container_name: store-frontend-app
+        container_name: store-api-app
         ports:
-            - 3000:3000
+            - 3005:3005
         volumes:
             - .:/home/node/app
