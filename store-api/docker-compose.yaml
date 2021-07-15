@@ -1,11 +1,42 @@
 version: '3'
 
 services:
-    app:
-        build: .
-        entrypoint: ./.docker/entrypoint.sh
-        container_name: store-api-app
-        ports:
-            - 3005:3005
-        volumes:
-            - .:/home/node/app
+  #  app:
+  #    build: .
+  #    entrypoint: dockerize -wait tcp://db:5432 -timeout 40s ./.docker/entrypoint.sh
+  #    container_name: store-api-app
+  #    ports:
+  #      - 3006:3005
+  #    volumes:
+  #      - .:/home/node/app
+  #    depends_on:
+  #      - db
+
+  db:
+    build: .docker/postgres
+    container_name: store-api-db
+    restart: always
+    tty: true
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=store
+    volumes:
+      - .pgdata:/var/lib/postgresql/data
+    ports:
+      - '5431:5432'
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: store-api-pgadmin
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@user.com
+      - PGADMIN_DEFAULT_PASSWORD=123456
+    ports:
+      - '9001:80'
+    depends_on:
+      - db
+    extra_hosts:
+      - 'host.docker.internal:172.17.0.1'
+    volumes:
+      - .pgadmindata:/var/lib/pgadmin

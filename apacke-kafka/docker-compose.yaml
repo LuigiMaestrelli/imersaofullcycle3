@@ -2,6 +2,7 @@ version: '3'
 services:
     zookeeper:
         image: confluentinc/cp-zookeeper:latest
+        container_name: zookeeper
         environment:
             ZOOKEEPER_CLIENT_PORT: 2181
         volumes:
@@ -10,6 +11,7 @@ services:
 
     kafka:
         image: confluentinc/cp-kafka:latest
+        container_name: kafka
         depends_on:
             - zookeeper
         ports:
@@ -30,6 +32,7 @@ services:
 
     kafka-topics-generator:
         image: confluentinc/cp-kafka:latest
+        container_name: kafka-topics-generator
         depends_on:
             - kafka
         command: >
@@ -39,6 +42,7 @@ services:
 
     control-center:
         image: confluentinc/cp-enterprise-control-center:6.0.1
+        container_name: kafka-control-center
         hostname: control-center
         depends_on:
             - kafka
