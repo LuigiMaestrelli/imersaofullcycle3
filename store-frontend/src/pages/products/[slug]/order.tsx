@@ -11,8 +11,10 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/dist/client/router';
+import { useSnackbar } from 'notistack';
 
-import { Product } from '../../../model';
+import { CreditCard, Product } from '../../../model';
 import http from '../../../http';
 
 interface OrderPageProps {
@@ -20,7 +22,24 @@ interface OrderPageProps {
 }
 
 const OrderPage: NextPage<OrderPageProps> = ({ product }) => {
+    const router = useRouter();
+    const { enqueueSnackbar } = useSnackbar();
     const { register, handleSubmit, setValue } = useForm();
+
+    const onSubmit = async (data: CreditCard) => {
+        try {
+            const { data: order } = await http.post('orders', {
+                credit_card: data,
+                items: [{ product_id: product.id, quantity: 1 }]
+            });
+            //router.push(`/orders/${order.id}`);
+        } catch (e) {
+            console.error(axios.isAxiosError(e) ? e.response?.data : e);
+            enqueueSnackbar('Erro ao realizar sua compra.', {
+                variant: 'error'
+            });
+        }
+    };
 
     return (
         <div>
@@ -43,7 +62,7 @@ const OrderPage: NextPage<OrderPageProps> = ({ product }) => {
                 Pague com cartão de crédito
             </Typography>
 
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
                         <TextField {...register('name')} required label="Nome" fullWidth />

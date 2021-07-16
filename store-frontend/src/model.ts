@@ -7,25 +7,28 @@ export interface Product {
     price: number;
     created_at: string;
 }
+export interface CreditCard {
+    number: string;
+    name: string;
+    expiration_month: number;
+    expiration_year: number;
+    cvv: string;
+}
 
-export const products: Product[] = [
-    {
-        id: 'uuid',
-        name: 'Um produto',
-        description: 'produto de teste',
-        price: 5.23,
-        image_url: `https://source.unsplash.com/random?product,${Math.random()}`,
-        slug: 'produto-teste',
-        created_at: '2021-07-13T00:00:00'
-    },
-    {
-        id: 'uuid2',
-        name: 'Outro produto',
-        description:
-            'produto de teste com uma descrição muito maior que a outrar para poder testar o tamanho do campo com quebra de linhas',
-        price: 5.23,
-        image_url: `https://source.unsplash.com/random?product,${Math.random()}`,
-        slug: 'produto-teste2',
-        created_at: '2021-07-13T00:00:00'
-    }
-];
+export enum OrderStatus {
+    Approved = 'approved',
+    Pending = 'pending'
+}
+
+export interface OrderItem {
+    product: Product;
+    quantity: number;
+    price: number;
+}
+
+export interface Order {
+    id: string;
+    credit_card: Omit<CreditCard, 'cvv' | 'name'>;
+    items: OrderItem[];
+    status: OrderStatus;
+}
