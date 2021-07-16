@@ -80,7 +80,7 @@ export class OrdersService {
 
     async findOne(id: string) {
         const order = await this.orderRepo.findOne(id, {
-            relations: ['items']
+            relations: ['items', 'items.product']
         });
 
         if (!order) {

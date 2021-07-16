@@ -28,7 +28,7 @@ export interface OrderItem {
 
 export interface Order {
     id: string;
-    credit_card: Omit<CreditCard, 'cvv' | 'name'>;
+    credit_card: Omit<CreditCard, 'cvv'>;
     items: OrderItem[];
     status: OrderStatus;
 }
