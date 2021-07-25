@@ -41,7 +41,7 @@ services:
               kafka-topics --create --topic=payments --if-not-exists --bootstrap-server=kafka:9092"
 
     control-center:
-        image: confluentinc/cp-enterprise-control-center:6.0.1
+        image: confluentinc/cp-enterprise-control-center:latest
         container_name: kafka-control-center
         hostname: control-center
         depends_on:
