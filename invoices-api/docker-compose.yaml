@@ -4,9 +4,9 @@ services:
     app:
         build: .
         entrypoint: dockerize -wait tcp://db:5432 -timeout 40s ./.docker/entrypoint.sh
-        container_name: store-api-app
+        container_name: invoices-api-app
         ports:
-            - 3005:3005
+            - 3007:3007
         volumes:
             - .:/home/node/app
         depends_on:
@@ -16,13 +16,13 @@ services:
 
     db:
         build: .docker/postgres
-        container_name: store-api-db
+        container_name: invoices-api-db
         restart: always
         tty: true
+        environment:
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_DB=invoices
         volumes:
             - .pgdata:/var/lib/postgresql/data
         ports:
-            - '5431:5432'
-        environment:
-            - POSTGRES_PASSWORD=root
-            - POSTGRES_DB=store
+            - '5433:5432'

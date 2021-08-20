@@ -25,19 +25,3 @@ services:
             - '5432:5432'
         extra_hosts:
             - 'host.docker.internal:172.17.0.1'
-
-    pgadmin:
-        image: dpage/pgadmin4:latest
-        container_name: appbank-pgadmin
-        tty: true
-        environment:
-            - PGADMIN_DEFAULT_EMAIL=admin@user.com
-            - PGADMIN_DEFAULT_PASSWORD=123456
-        ports:
-            - '9000:80'
-        depends_on:
-            - db
-        extra_hosts:
-            - 'host.docker.internal:172.17.0.1'
-        volumes:
-            - .pgadmindata:/var/lib/pgadmin
